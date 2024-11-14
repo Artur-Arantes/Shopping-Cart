@@ -38,4 +38,9 @@ public class ExceptionHandlerController extends RuntimeException {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(exception.getMessage());
     }
 
+    @ExceptionHandler(NegativeQuantityException.class)
+    public ResponseEntity<String> handleNegativeQuantityException(NegativeQuantityException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
 }

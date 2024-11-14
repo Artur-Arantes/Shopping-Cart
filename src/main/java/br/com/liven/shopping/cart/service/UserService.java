@@ -31,7 +31,7 @@ public class UserService {
         if (personRepository.existsById(user.getPerson().getEmail()) || repository.findByPerson(user.getPerson()).isPresent()) {
             throw new DuplicateKeyException("Already exists an account registered with this email");
         }
-        User savedUser = repository.save(user);
+        repository.save(user);
         repository.savePermissionForUser(user.getId(), (long) EnumUserPermission.USER.getCode());
     }
 
