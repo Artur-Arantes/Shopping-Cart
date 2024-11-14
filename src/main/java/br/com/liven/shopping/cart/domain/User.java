@@ -18,31 +18,34 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode(of = "id")
 @Entity
-public class User implements UserDetails {
+@AttributeOverrides({
+        @AttributeOverride(name = "version", column = @Column(name = "ver_user")),
+        @AttributeOverride(name = "createdAt", column = @Column(name = "cre_at_user")),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "upd_at_user"))
+})
+public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_use")
+    @Column(name = "id_user")
     private Long id;
 
-    @Column(name = "pwd")
-    @Getter(onMethod = @__(@Override))
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "act")
-    @Getter(onMethod = @__(@Override))
+    @Column(name = "active")
     private boolean enabled;
 
     @OneToOne(fetch = FetchType.EAGER, targetEntity = Person.class, cascade = CascadeType.ALL)
     @JsonManagedReference
-    @JoinColumn(name = "id_per")
+    @JoinColumn(name = "id_person",referencedColumnName = "email")
     @ToString.Exclude
     private Person person;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
-    @JoinTable(name = "user_permission", joinColumns = @JoinColumn(name = "id_use", referencedColumnName = "id_use"),
-            inverseJoinColumns = @JoinColumn(name = "id_prm", referencedColumnName = "id_prm"))
+    @JoinTable(name = "user_permission", joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_permission", referencedColumnName = "id_permission"))
     List<Permission> permissions;
 
     @Override
@@ -69,4 +72,16 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return this.enabled;
     }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+
 }

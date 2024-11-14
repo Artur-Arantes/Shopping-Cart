@@ -17,15 +17,16 @@ import org.springframework.security.core.GrantedAuthority;
 public class Permission implements GrantedAuthority {
 
     @Id
-    @Column(name = "id_prm")
+    @Column(name = "id_permission")
     private long id;
 
-    @Column(name = "nam")
+    @Column(name = "name")
     @Enumerated(EnumType.STRING)
     private EnumUserPermission name;
 
     @Override
     public String getAuthority() {
-        return name.getRole();
+        return this.name != null ? this.name.getRole() : null;
     }
+
 }

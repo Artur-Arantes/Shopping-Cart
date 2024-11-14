@@ -3,7 +3,6 @@ package br.com.liven.shopping.cart.dto;
 import br.com.liven.shopping.cart.domain.Person;
 import br.com.liven.shopping.cart.domain.User;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,7 +16,6 @@ public record UserInPutDto(
 
         @NotBlank(message = "Password cannot be blank")
         @NotNull(message = "Password cannot be null")
-        @Min(5)
         String password
 ) {
     public User toUser() {

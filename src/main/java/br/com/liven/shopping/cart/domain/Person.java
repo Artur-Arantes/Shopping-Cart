@@ -18,11 +18,11 @@ import lombok.*;
 public class Person {
 
 
-    @Column(name = "nam")
+    @Column(name = "name")
     private String name;
 
     @Id
-    @Column(name = "eml")
+    @Column(name = "email")
     private String email;
 
 }
