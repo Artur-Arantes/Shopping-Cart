@@ -29,7 +29,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "auth").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/user").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/user").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/v1/user/add/notification").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(verifyToken, UsernamePasswordAuthenticationFilter.class)
                 .build();
