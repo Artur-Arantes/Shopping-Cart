@@ -51,4 +51,13 @@ public class TokenService {
         }
     }
 
+
+    public String extractToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.replace("Bearer", "").trim();
+
+        }
+        throw new IllegalArgumentException("Invalid token");
+    }
+
 }
