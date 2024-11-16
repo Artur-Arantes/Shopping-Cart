@@ -15,8 +15,8 @@ public class CartStateService {
 
 
     public boolean isCartExpired(ZonedDateTime updatedAt) {
-        ZonedDateTime now = ZonedDateTime.now(updatedAt.getZone());
-        Duration duration = Duration.between(updatedAt, now);
+        final var now = ZonedDateTime.now(updatedAt.getZone());
+        final var duration = Duration.between(updatedAt, now);
 
         return duration.toMinutes() > new BigDecimal(timeToExpire).longValue();
     }

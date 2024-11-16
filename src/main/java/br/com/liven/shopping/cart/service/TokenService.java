@@ -22,7 +22,7 @@ public class TokenService {
 
     @SneakyThrows
     public String tokenGenerate(User user) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        final var algorithm = Algorithm.HMAC256(secretKey);
         try {
             return JWT.create().withIssuer("shoppingCart").withSubject(user.getPerson().getEmail())
                     .withExpiresAt(createDateOfExpirition()).sign(algorithm);
@@ -38,7 +38,7 @@ public class TokenService {
     public String verifyToken(String token) {
 
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            final var algorithm = Algorithm.HMAC256(secretKey);
 
             return JWT.require(algorithm)
                     .withIssuer("shoppingCart")
@@ -58,6 +58,11 @@ public class TokenService {
 
         }
         throw new IllegalArgumentException("Invalid token");
+    }
+
+    public String getEmailByAuthorizationHeader(String authorization) {
+        final var token = extractToken(authorization);
+        return verifyToken(token);
     }
 
 }

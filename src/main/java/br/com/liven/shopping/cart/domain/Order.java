@@ -23,7 +23,7 @@ import java.util.List;
         @AttributeOverride(name = "createdAt", column = @Column(name = "order_created_at")),
         @AttributeOverride(name = "updatedAt", column = @Column(name = "order_updated_at"))
 })
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order")

@@ -40,7 +40,7 @@ public class Product extends BaseEntity {
     private Inventory inventory;
 
 
-    public ProductOutPutDto toOutPutDto(){
+    public ProductOutPutDto toOutPutDto() {
         return ProductOutPutDto.builder()
                 .sku(sku)
                 .quantity(inventory.getQuantity())

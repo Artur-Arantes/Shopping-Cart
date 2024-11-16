@@ -6,9 +6,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record GetCartOutPutDto(
-long id,
-List<ProductOutPutDto> products,
-@JsonProperty("total_amount")
-BigDecimal totalAmount
+        long id,
+        List<ProductOutPutDto> products,
+        @JsonProperty("total_amount")
+        BigDecimal totalAmount
 ) {
 }

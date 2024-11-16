@@ -6,20 +6,19 @@ import br.com.liven.shopping.cart.dto.UserOutPutDto;
 import br.com.liven.shopping.cart.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("v1/user")
 public class UserController {
 
     final private UserService service;
 
-    public UserController(UserService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<HttpStatus> addUser(@RequestBody @Valid @NonNull final UserInPutDto userInPutDto) {
@@ -29,7 +28,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<UserOutPutDto> getUser(@NotEmpty @RequestParam(name = "id") final String id) {
-        UserOutPutDto outPut = service.getUserOutPut(id);
+        final var outPut = service.getUserOutPut(id);
         return ResponseEntity.ok(outPut);
     }
 

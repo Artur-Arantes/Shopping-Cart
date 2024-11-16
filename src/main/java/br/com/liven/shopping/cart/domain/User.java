@@ -38,7 +38,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToOne(fetch = FetchType.EAGER, targetEntity = Person.class, cascade = CascadeType.ALL)
     @JsonManagedReference
-    @JoinColumn(name = "id_person",referencedColumnName = "email")
+    @JoinColumn(name = "id_person", referencedColumnName = "email")
     @ToString.Exclude
     private Person person;
 

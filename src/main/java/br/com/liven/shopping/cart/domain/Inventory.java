@@ -20,7 +20,7 @@ import java.math.BigDecimal;
         @AttributeOverride(name = "createdAt", column = @Column(name = "inventory_created_at")),
         @AttributeOverride(name = "updatedAt", column = @Column(name = "inventory_updated_at"))
 })
-public class Inventory extends BaseEntity{
+public class Inventory extends BaseEntity {
 
 
     @Id

@@ -41,12 +41,11 @@ public class Cart extends BaseEntity {
     private List<ProductCart> products;
 
 
-
-    public GetCartOutPutDto toGetCartOutPutDto(){
+    public GetCartOutPutDto toGetCartOutPutDto() {
         List<ProductOutPutDto> productOutPutDto = products.stream().map(ProductCart::toOutPutDto).toList();
         BigDecimal totalAmount = productOutPutDto.stream().map(ProductOutPutDto::getTotalItem)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return  new GetCartOutPutDto(id, productOutPutDto,totalAmount);
+        return new GetCartOutPutDto(id, productOutPutDto, totalAmount);
     }
 
 }

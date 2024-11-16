@@ -20,8 +20,8 @@ public class CheckoutService {
 
     @Transactional
     public OrderCheckoutOutPutDto checkout(Cart cart) {
-        if(orderRepository.findByCart(cart).isPresent()){
-            throw  new DuplicateKeyException("Already exist a order for this cart");
+        if (orderRepository.findByCart(cart).isPresent()) {
+            throw new DuplicateKeyException("Already exist a order for this cart");
         }
 
 
@@ -37,11 +37,11 @@ public class CheckoutService {
                 .collect(Collectors.toSet());
 
 
-        BigDecimal totalAmount = cart.getProducts().stream()
-                .map(ProductCart :: getTotalItem)
+        final var totalAmount = cart.getProducts().stream()
+                .map(ProductCart::getTotalItem)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Order order = Order.builder()
+        final var order = Order.builder()
                 .cart(cart)
                 .user(cart.getUser())
                 .products(products.stream().toList())
@@ -55,7 +55,7 @@ public class CheckoutService {
                     .orderId(order.getId())
                     .build());
         });
-        Order savedOrder = orderRepository.save(order);
+        final var savedOrder = orderRepository.save(order);
 
         return savedOrder.toCheckoutOutPut();
 

@@ -1,6 +1,9 @@
 package br.com.liven.shopping.cart.service;
 
-import br.com.liven.shopping.cart.domain.*;
+import br.com.liven.shopping.cart.domain.Cart;
+import br.com.liven.shopping.cart.domain.Product;
+import br.com.liven.shopping.cart.domain.ProductCart;
+import br.com.liven.shopping.cart.domain.ProductCartId;
 import br.com.liven.shopping.cart.dto.CheckoutInPutDto;
 import br.com.liven.shopping.cart.dto.GetCartOutPutDto;
 import br.com.liven.shopping.cart.dto.OrderCheckoutOutPutDto;
@@ -10,14 +13,12 @@ import br.com.liven.shopping.cart.repository.CartRepository;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -31,9 +32,9 @@ public class CartService {
 
 
     public GetCartOutPutDto getValidCart(final String email) {
-        User user = userService.getUser(email);
+        final var user = userService.getUser(email);
 
-        Cart newCart = Cart.builder()
+        final var newCart = Cart.builder()
                 .products(new ArrayList<>())
                 .user(user)
                 .build();
@@ -44,7 +45,7 @@ public class CartService {
     @Transactional
     public void update(final UpdateCartInPutDto inPut, final String email) {
 
-        Cart cart = getValidCart(inPut.id(), email);
+        final var cart = getValidCart(inPut.id(), email);
         List<ProductCart> newListProductCart = new ArrayList<>();
 
         if (!cart.getProducts().isEmpty()) {
@@ -67,7 +68,7 @@ public class CartService {
 
 
     private Cart getValidCart(final long id, final String email) {
-        Cart cart = repository.findById(id).orElseThrow(() ->
+        final var cart = repository.findById(id).orElseThrow(() ->
                 new ObjectNotFoundException("Cart with ID " + id + " does not exist"));
 
         if (!cart.getUser().getPerson().getEmail().equalsIgnoreCase(email)) {
@@ -95,7 +96,7 @@ public class CartService {
 
     @Transactional
     public OrderCheckoutOutPutDto processCheckout(final CheckoutInPutDto input, final String email) {
-        Cart cart = getValidCart(input.id(), email);
+        final var cart = getValidCart(input.id(), email);
 
         if (cart.getProducts().isEmpty()) {
             throw new IllegalStateException("Cant do the checkout with empty cart");
@@ -109,9 +110,5 @@ public class CartService {
 
     public GetCartOutPutDto getCartById(final long id, final String email) {
         return getValidCart(id, email).toGetCartOutPutDto();
-    }
-
-    public void saveCart(Cart cart) {
-        repository.save(cart);
     }
 }

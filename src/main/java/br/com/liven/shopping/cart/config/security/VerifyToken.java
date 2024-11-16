@@ -1,7 +1,5 @@
 package br.com.liven.shopping.cart.config.security;
 
-import br.com.liven.shopping.cart.domain.Person;
-import br.com.liven.shopping.cart.domain.User;
 import br.com.liven.shopping.cart.exception.ObjectNotFoundException;
 import br.com.liven.shopping.cart.repository.PersonRepository;
 import br.com.liven.shopping.cart.repository.UserRepository;
@@ -32,10 +30,10 @@ public class VerifyToken extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        final var authHeader = request.getHeader("Authorization");
         if (!Objects.isNull(authHeader)) {
-            String token = authHeader.replace("Bearer", "").trim();
-            String login = service.verifyToken(token);
+            final var token = authHeader.replace("Bearer", "").trim();
+            final var login = service.verifyToken(token);
             UsernamePasswordAuthenticationToken authentication = getUsernamePasswordAuthenticationToken(login);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -43,9 +41,9 @@ public class VerifyToken extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String login) {
-        Person person = personRepository.findById(login).
+        final var person = personRepository.findById(login).
                 orElseThrow(() -> new ObjectNotFoundException("Person Not Found"));
-        User user = userRepository.findByPerson(person).
+        final var user = userRepository.findByPerson(person).
                 orElseThrow(() -> new ObjectNotFoundException("User Not Found"));
         return new UsernamePasswordAuthenticationToken(user,
                 null, user.getAuthorities());

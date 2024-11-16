@@ -24,17 +24,15 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<GetCartOutPutDto> addCart(@RequestHeader("Authorization") String authorizationHeader) {
-        String token = tokenService.extractToken(authorizationHeader);
-        String email = tokenService.verifyToken(token);
-        GetCartOutPutDto outPut = service.getValidCart(email);
+        final var email = tokenService.getEmailByAuthorizationHeader(authorizationHeader);
+        final var outPut = service.getValidCart(email);
         return ResponseEntity.ok(outPut);
     }
 
     @PutMapping
     public ResponseEntity<HttpStatus> updateCartProducts(@RequestBody @Valid @NonNull final UpdateCartInPutDto inPut,
                                                          @RequestHeader("Authorization") String authorizationHeader) {
-        String token = tokenService.extractToken(authorizationHeader);
-        String email = tokenService.verifyToken(token);
+        final var email = tokenService.getEmailByAuthorizationHeader(authorizationHeader);
         service.update(inPut, email);
         return ResponseEntity.ok().build();
     }
@@ -42,18 +40,16 @@ public class CartController {
     @GetMapping
     public ResponseEntity<GetCartOutPutDto> getCartById(@RequestHeader("Authorization") String authorizationHeader,
                                                         @RequestParam long id) {
-        String token = tokenService.extractToken(authorizationHeader);
-        String email = tokenService.verifyToken(token);
-        GetCartOutPutDto outPut = service.getCartById(id, email);
+        final var email = tokenService.getEmailByAuthorizationHeader(authorizationHeader);
+        final var outPut = service.getCartById(id, email);
         return ResponseEntity.ok(outPut);
     }
 
     @PostMapping("/checkout")
     public ResponseEntity<OrderCheckoutOutPutDto> checkout(@RequestHeader("Authorization") String authorizationHeader,
                                                            @RequestBody CheckoutInPutDto input) {
-        String token = tokenService.extractToken(authorizationHeader);
-        String email = tokenService.verifyToken(token);
-        OrderCheckoutOutPutDto outPut = service.processCheckout(input, email);
+        final var email = tokenService.getEmailByAuthorizationHeader(authorizationHeader);
+        final var outPut = service.processCheckout(input, email);
         return ResponseEntity.ok(outPut);
     }
 }

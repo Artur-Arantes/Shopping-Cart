@@ -22,12 +22,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
 
-    UserRepository repository;
-    PersonRepository personRepository;
+    private final UserRepository repository;
+    private final PersonRepository personRepository;
 
     @Transactional
     public void addUser(final UserInPutDto userInPutDto) {
-        User user = toUser(userInPutDto);
+        final var user = toUser(userInPutDto);
         if (personRepository.existsById(user.getPerson().getEmail()) || repository.findByPerson(user.getPerson()).isPresent()) {
             throw new DuplicateKeyException("Already exists an account registered with this email");
         }
@@ -35,10 +35,10 @@ public class UserService {
         repository.savePermissionForUser(user.getId(), (long) EnumUserPermission.USER.getCode());
     }
 
-    public UserOutPutDto getUser(final String id) {
+    public UserOutPutDto getUserOutPut(final String id) {
         Optional<Person> person = personRepository.findById(id);
         if (person.isPresent()) {
-            User user = repository.findByPerson(person.get()).orElseThrow(() ->
+            final var user = repository.findByPerson(person.get()).orElseThrow(() ->
                     new ObjectNotFoundException("User Not found"));
 
             return new UserOutPutDto(user);
@@ -47,7 +47,7 @@ public class UserService {
     }
 
     public void deleteUser(final UserDeleteInPutDto userDeleteInputDto) {
-        User user = new User();
+        final var user = new User();
         BeanUtils.copyProperties(userDeleteInputDto, user);
         if (repository.existsById(user.getId())) {
             repository.deleteById(user.getId());
@@ -57,8 +57,17 @@ public class UserService {
     }
 
     private User toUser(final UserInPutDto userInPutDto) {
-        User user = userInPutDto.toUser();
+        final var user = userInPutDto.toUser();
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return user;
+    }
+
+    public User getUser(final String id) {
+        Optional<Person> person = personRepository.findById(id);
+        if (person.isPresent()) {
+            return repository.findByPerson(person.get()).orElseThrow(() ->
+                    new ObjectNotFoundException("User Not found"));
+        }
+        throw new ObjectNotFoundException("Person Not Found");
     }
 }

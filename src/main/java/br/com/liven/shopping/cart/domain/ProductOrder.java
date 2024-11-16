@@ -37,7 +37,7 @@ public class ProductOrder {
     private BigDecimal totalItem;
 
 
-    public ProductOutPutDto toOutPutDto(){
+    public ProductOutPutDto toOutPutDto() {
         return ProductOutPutDto.builder()
                 .sku(product.getSku())
                 .quantity(quantity)

@@ -36,7 +36,7 @@ public class ProductCart {
     private BigDecimal totalItem;
 
 
-    public ProductOrder toProductOrder(){
+    public ProductOrder toProductOrder() {
         return ProductOrder.builder()
                 .id(ProductOrderId.builder()
                         .productId(product.getSku())
@@ -48,7 +48,7 @@ public class ProductCart {
     }
 
 
-    public ProductOutPutDto toOutPutDto(){
+    public ProductOutPutDto toOutPutDto() {
         return ProductOutPutDto.builder()
                 .sku(getProduct().getSku())
                 .quantity(quantity)

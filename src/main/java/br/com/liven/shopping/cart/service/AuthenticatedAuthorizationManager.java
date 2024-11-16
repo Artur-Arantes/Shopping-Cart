@@ -21,7 +21,7 @@ public class AuthenticatedAuthorizationManager implements UserDetailsService {
     @Override
     @SneakyThrows
     public UserDetails loadUserByUsername(String username) {
-        Person person = personRepository.findById(username).orElseThrow(() ->
+        final var person = personRepository.findById(username).orElseThrow(() ->
                 new UsernameNotFoundException("Person Not Found"));
         return userRepository.findByPerson(person).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
     }
