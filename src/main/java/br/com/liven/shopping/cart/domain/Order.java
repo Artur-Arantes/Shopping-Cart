@@ -1,6 +1,7 @@
 package br.com.liven.shopping.cart.domain;
 
 
+import br.com.liven.shopping.cart.dto.OrderCheckoutOutPutDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,11 +23,11 @@ import java.util.List;
         @AttributeOverride(name = "createdAt", column = @Column(name = "order_created_at")),
         @AttributeOverride(name = "updatedAt", column = @Column(name = "order_updated_at"))
 })
-public class Order {
+public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order")
-    private Long id;
+    private long id;
 
     @OneToOne(fetch = FetchType.EAGER, targetEntity = User.class, cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -37,15 +38,22 @@ public class Order {
     @Column(name = "total_amount")
     private BigDecimal amount;
 
-    @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
-    @JoinTable(name = "product_order", joinColumns = @JoinColumn(name = "id_order", referencedColumnName = "id_order"),
-            inverseJoinColumns = @JoinColumn(name = "sku", referencedColumnName = "sku"))
-    List<Product> products;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductOrder> products;
 
     @OneToOne
     @JsonManagedReference
     @JoinColumn(name = "id_cart", referencedColumnName = "id_cart")
     @ToString.Exclude
     private Cart cart;
+
+    public OrderCheckoutOutPutDto toCheckoutOutPut() {
+
+        return OrderCheckoutOutPutDto.builder()
+                .id(id)
+                .totalAmount(amount)
+                .products(products.stream().map(ProductOrder::toOutPutDto).toList())
+                .build();
+    }
 }

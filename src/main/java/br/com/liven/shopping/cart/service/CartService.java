@@ -1,35 +1,34 @@
 package br.com.liven.shopping.cart.service;
 
 import br.com.liven.shopping.cart.domain.*;
+import br.com.liven.shopping.cart.dto.CheckoutInPutDto;
 import br.com.liven.shopping.cart.dto.GetCartOutPutDto;
 import br.com.liven.shopping.cart.dto.OrderCheckoutOutPutDto;
 import br.com.liven.shopping.cart.dto.UpdateCartInPutDto;
-import br.com.liven.shopping.cart.exception.NegativeQuantityException;
 import br.com.liven.shopping.cart.exception.ObjectNotFoundException;
 import br.com.liven.shopping.cart.repository.CartRepository;
-import br.com.liven.shopping.cart.repository.ProductRepository;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ValidationException;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@AllArgsConstructor
 public class CartService {
 
     private final CartRepository repository;
     private final UserService userService;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
     private final CartStateService cartStateService;
+    private final CheckoutService checkoutService;
 
-    public CartService(CartRepository repository, UserService userService, ProductRepository productRepository, CartStateService cartStateService) {
-        this.repository = repository;
-        this.userService = userService;
-        this.productRepository = productRepository;
-        this.cartStateService = cartStateService;
-    }
 
     public GetCartOutPutDto getValidCart(final String email) {
         User user = userService.getUser(email);
@@ -56,21 +55,14 @@ public class CartService {
         repository.save(cart);
     }
 
-    private void setProductsListForEmptyCart(UpdateCartInPutDto inPut, Cart cart,
+    private void setProductsListForEmptyCart(final UpdateCartInPutDto inPut, final Cart cart,
                                              List<ProductCart> newListProductCart) {
         inPut.products().forEach(prd -> {
-            Product product = getProductFromId(prd.sku());
-            if (hasStock(prd.quantity(), product)) {
-                ProductCart productCart = fillProductCart(prd.quantity(), product, cart);
-                newListProductCart.add(productCart);
-            }
+            Product product = productService.getProductFromId(prd.sku());
+            productService.hasStock(prd.quantity(), product);
+            ProductCart productCart = fillProductCart(prd.quantity(), product, cart);
+            newListProductCart.add(productCart);
         });
-    }
-
-    private Product getProductFromId(long id) {
-        return productRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Product with SKU " + id + " does not exist"));
-
     }
 
 
@@ -96,31 +88,30 @@ public class CartService {
                         .build())
                 .product(product)
                 .quantity(input)
+                .totalItem(input.multiply(product.getPrice()))
                 .cart(cart)
                 .build();
     }
 
-    private boolean hasStock(final BigDecimal quantity, final Product product) {
-        BigDecimal inventoryUpdated = product.getInventory().getQuantity().subtract(quantity);
-
-        if (inventoryUpdated.compareTo(BigDecimal.ZERO) < 0) {
-            throw new NegativeQuantityException("Insufficient stock for product SKU: " + product.getSku());
-        }
-        return true;
-    }
-
     @Transactional
-    public OrderCheckoutOutPutDto checkout(long id, final String email) {
-        Cart cart = getValidCart(id, email);
+    public OrderCheckoutOutPutDto processCheckout(final CheckoutInPutDto input, final String email) {
+        Cart cart = getValidCart(input.id(), email);
 
         if (cart.getProducts().isEmpty()) {
             throw new IllegalStateException("Cant do the checkout with empty cart");
         }
-        //     return CheckoutService.checkout(cart);
-        return null;
+        try {
+            return checkoutService.checkout(cart);
+        } catch (OptimisticLockException e) {
+            throw new ValidationException("Stock was changed by another transaction. Please try again.");
+        }
     }
 
     public GetCartOutPutDto getCartById(final long id, final String email) {
         return getValidCart(id, email).toGetCartOutPutDto();
+    }
+
+    public void saveCart(Cart cart) {
+        repository.save(cart);
     }
 }

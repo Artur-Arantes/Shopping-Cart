@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -40,9 +41,12 @@ public class Cart extends BaseEntity {
     private List<ProductCart> products;
 
 
+
     public GetCartOutPutDto toGetCartOutPutDto(){
-        List<ProductOutPutDto> productOutPutDto = products.stream().map(o-> o.getProduct().toOutPutDto()).toList();
-        return  new GetCartOutPutDto(id, productOutPutDto);
+        List<ProductOutPutDto> productOutPutDto = products.stream().map(ProductCart::toOutPutDto).toList();
+        BigDecimal totalAmount = productOutPutDto.stream().map(ProductOutPutDto::getTotalItem)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return  new GetCartOutPutDto(id, productOutPutDto,totalAmount);
     }
 
 }

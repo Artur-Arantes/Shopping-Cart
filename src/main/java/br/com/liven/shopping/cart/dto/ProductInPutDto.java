@@ -22,16 +22,16 @@ public record ProductInPutDto(
 
 ) {
 
-   public Product toProduct(){
-       return Product.builder()
-               .sku(sku)
-               .name(name)
-               .description(description)
-               .price(price)
-               .inventory(Inventory.builder()
-                       .quantity(quantity)
-                       .sku(sku)
-                       .build())
-               .build();
-   }
+    public Product toProduct() {
+        return Product.builder()
+                .sku(sku)
+                .name(name)
+                .description(description)
+                .price(price)
+                .inventory(Inventory.builder()
+                        .quantity(quantity)
+                        .sku(sku)
+                        .build())
+                .build();
+    }
 }

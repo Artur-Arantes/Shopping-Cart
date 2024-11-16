@@ -1,12 +1,10 @@
 package br.com.liven.shopping.cart.service;
 
-import br.com.liven.shopping.cart.domain.Cart;
-import br.com.liven.shopping.cart.domain.Order;
-import br.com.liven.shopping.cart.domain.Product;
-import br.com.liven.shopping.cart.domain.ProductCart;
-import br.com.liven.shopping.cart.repository.CartRepository;
+import br.com.liven.shopping.cart.domain.*;
+import br.com.liven.shopping.cart.dto.OrderCheckoutOutPutDto;
 import br.com.liven.shopping.cart.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,29 +13,51 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CheckoutService {
-    @Autowired
-    private static CartRepository cartRepository;
-    @Autowired
-    private static OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final ProductService productService;
 
     @Transactional
-    public static synchronized Order checkout(Cart cart) {
-        Set<Product> products = cart.getProducts().stream()
-                .map(ProductCart::getProduct)
+    public OrderCheckoutOutPutDto checkout(Cart cart) {
+        if(orderRepository.findByCart(cart).isPresent()){
+            throw  new DuplicateKeyException("Already exist a order for this cart");
+        }
+
+
+        cart.getProducts().forEach(prd -> {
+            Product product = productService.getProductFromId(prd.getId().getProductId());
+            productService.hasStock(prd.getQuantity(), product);
+            product.getInventory().setQuantity(product.getInventory().getQuantity().subtract(prd.getQuantity()));
+            productService.updateProduct(product);
+        });
+
+        Set<ProductOrder> products = cart.getProducts().stream()
+                .map(ProductCart::toProductOrder)
                 .collect(Collectors.toSet());
 
+
         BigDecimal totalAmount = cart.getProducts().stream()
-                .map(productCart -> productCart.getProduct().getPrice().multiply(productCart.getQuantity()))
+                .map(ProductCart :: getTotalItem)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order order = Order.builder()
+                .cart(cart)
                 .user(cart.getUser())
                 .products(products.stream().toList())
                 .amount(totalAmount)
                 .build();
 
-       return orderRepository.save(order);
+        order.getProducts().forEach(p -> {
+            p.setOrder(order);
+            p.setId(ProductOrderId.builder()
+                    .productId(p.getProduct().getSku())
+                    .orderId(order.getId())
+                    .build());
+        });
+        Order savedOrder = orderRepository.save(order);
+
+        return savedOrder.toCheckoutOutPut();
 
     }
 

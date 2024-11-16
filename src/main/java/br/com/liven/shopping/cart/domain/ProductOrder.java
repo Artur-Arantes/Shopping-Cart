@@ -6,23 +6,24 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+
 @Entity
-@Table(name = "product_cart")
+@Table(name = "product_order")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class ProductCart {
+public class ProductOrder {
 
     @EmbeddedId
-    private ProductCartId id;
+    private ProductOrderId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("cartId")
-    @JoinColumn(name = "id_cart", nullable = false)
-    private Cart cart;
+    @MapsId("orderId")
+    @JoinColumn(name = "id_order", nullable = false)
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("productId")
@@ -32,25 +33,13 @@ public class ProductCart {
     @Column(name = "quantity", nullable = false)
     private BigDecimal quantity;
 
-    @Column(name = "total_item", nullable = false)
+    @Column(name = "total_item")
     private BigDecimal totalItem;
-
-
-    public ProductOrder toProductOrder(){
-        return ProductOrder.builder()
-                .id(ProductOrderId.builder()
-                        .productId(product.getSku())
-                        .build())
-                .product(product)
-                .quantity(quantity)
-                .totalItem(totalItem)
-                .build();
-    }
 
 
     public ProductOutPutDto toOutPutDto(){
         return ProductOutPutDto.builder()
-                .sku(getProduct().getSku())
+                .sku(product.getSku())
                 .quantity(quantity)
                 .price(product.getPrice())
                 .totalItem(totalItem)
@@ -58,5 +47,5 @@ public class ProductCart {
                 .name(product.getName())
                 .build();
     }
-}
 
+}
