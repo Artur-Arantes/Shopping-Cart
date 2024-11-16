@@ -1,5 +1,7 @@
 package br.com.liven.shopping.cart.domain;
 
+import br.com.liven.shopping.cart.dto.GetCartOutPutDto;
+import br.com.liven.shopping.cart.dto.ProductOutPutDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,9 +19,9 @@ import java.util.List;
 @ToString
 @Entity
 @AttributeOverrides({
-        @AttributeOverride(name = "version", column = @Column(name = "ver_cart")),
-        @AttributeOverride(name = "createdAt", column = @Column(name = "cre_at_cart")),
-        @AttributeOverride(name = "updatedAt", column = @Column(name = "upd_at_cart"))
+        @AttributeOverride(name = "version", column = @Column(name = "cart_version")),
+        @AttributeOverride(name = "createdAt", column = @Column(name = "cart_created_at")),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "cart_updated_at"))
 })
 public class Cart extends BaseEntity {
 
@@ -34,13 +36,13 @@ public class Cart extends BaseEntity {
     @ToString.Exclude
     private User user;
 
-    @Column(name = "closed")
-    private boolean closed;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductCart> products;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @ToString.Exclude
-    @JoinTable(name = "product_cart", joinColumns = @JoinColumn(name = "id_cart", referencedColumnName = "id_cart"),
-            inverseJoinColumns = @JoinColumn(name = "sku", referencedColumnName = "sku"))
-    List<Product> products;
+
+    public GetCartOutPutDto toGetCartOutPutDto(){
+        List<ProductOutPutDto> productOutPutDto = products.stream().map(o-> o.getProduct().toOutPutDto()).toList();
+        return  new GetCartOutPutDto(id, productOutPutDto);
+    }
 
 }

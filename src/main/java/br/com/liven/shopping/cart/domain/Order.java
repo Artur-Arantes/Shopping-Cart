@@ -18,9 +18,9 @@ import java.util.List;
 @ToString
 @Entity
 @AttributeOverrides({
-        @AttributeOverride(name = "version", column = @Column(name = "ver_order")),
-        @AttributeOverride(name = "createdAt", column = @Column(name = "cre_at_order")),
-        @AttributeOverride(name = "updatedAt", column = @Column(name = "upd_at_order"))
+        @AttributeOverride(name = "version", column = @Column(name = "order_version")),
+        @AttributeOverride(name = "createdAt", column = @Column(name = "order_created_at")),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "order_updated_at"))
 })
 public class Order {
     @Id
@@ -43,4 +43,9 @@ public class Order {
             inverseJoinColumns = @JoinColumn(name = "sku", referencedColumnName = "sku"))
     List<Product> products;
 
+    @OneToOne
+    @JsonManagedReference
+    @JoinColumn(name = "id_cart", referencedColumnName = "id_cart")
+    @ToString.Exclude
+    private Cart cart;
 }

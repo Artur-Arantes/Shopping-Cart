@@ -1,6 +1,5 @@
 package br.com.liven.shopping.cart.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,9 +16,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "inventory")
 @AttributeOverrides({
-        @AttributeOverride(name = "version", column = @Column(name = "ver_inv")),
-        @AttributeOverride(name = "createdAt", column = @Column(name = "cre_at_inv")),
-        @AttributeOverride(name = "updatedAt", column = @Column(name = "upd_at_inv"))
+        @AttributeOverride(name = "version", column = @Column(name = "inventory_version")),
+        @AttributeOverride(name = "createdAt", column = @Column(name = "inventory_created_at")),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "inventory_updated_at"))
 })
 public class Inventory extends BaseEntity{
 
@@ -31,5 +30,6 @@ public class Inventory extends BaseEntity{
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sku", referencedColumnName = "sku", insertable = false, updatable = false)
+    @ToString.Exclude
     private Product product;
 }

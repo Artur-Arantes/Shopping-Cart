@@ -19,9 +19,9 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @Entity
 @AttributeOverrides({
-        @AttributeOverride(name = "version", column = @Column(name = "ver_user")),
-        @AttributeOverride(name = "createdAt", column = @Column(name = "cre_at_user")),
-        @AttributeOverride(name = "updatedAt", column = @Column(name = "upd_at_user"))
+        @AttributeOverride(name = "version", column = @Column(name = "user_version")),
+        @AttributeOverride(name = "createdAt", column = @Column(name = "user_created_at")),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "user_updated_at"))
 })
 public class User extends BaseEntity implements UserDetails {
 

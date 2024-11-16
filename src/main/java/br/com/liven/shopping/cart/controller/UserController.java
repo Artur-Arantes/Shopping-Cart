@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<UserOutPutDto> getUser(@NotEmpty @RequestParam(name = "id") final String id) {
-        UserOutPutDto outPut = service.getUser(id);
+        UserOutPutDto outPut = service.getUserOutPut(id);
         return ResponseEntity.ok(outPut);
     }
 

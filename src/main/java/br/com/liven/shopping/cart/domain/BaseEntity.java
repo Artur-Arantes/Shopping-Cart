@@ -1,6 +1,9 @@
 package br.com.liven.shopping.cart.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

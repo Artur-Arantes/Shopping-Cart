@@ -16,9 +16,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "product")
 @AttributeOverrides({
-        @AttributeOverride(name = "version", column = @Column(name = "ver_prd")),
-        @AttributeOverride(name = "createdAt", column = @Column(name = "cre_at_prd")),
-        @AttributeOverride(name = "updatedAt", column = @Column(name = "upd_at_prd"))
+        @AttributeOverride(name = "version", column = @Column(name = "product_version")),
+        @AttributeOverride(name = "createdAt", column = @Column(name = "product_created_at")),
+        @AttributeOverride(name = "updatedAt", column = @Column(name = "product_updated_at"))
 })
 public class Product extends BaseEntity {
 
@@ -36,6 +36,7 @@ public class Product extends BaseEntity {
     private String description;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Inventory inventory;
 
 
