@@ -2,9 +2,7 @@ package br.com.liven.shopping.cart.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,6 +11,8 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 @Schema(description = "product")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductOutPutDto implements Serializable {
     private long sku;
     @Schema(description = "Product quantity")

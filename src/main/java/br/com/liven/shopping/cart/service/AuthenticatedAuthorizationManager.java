@@ -1,6 +1,5 @@
 package br.com.liven.shopping.cart.service;
 
-import br.com.liven.shopping.cart.domain.Person;
 import br.com.liven.shopping.cart.repository.PersonRepository;
 import br.com.liven.shopping.cart.repository.UserRepository;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
 package br.com.liven.shopping.cart.controller;
 
-import br.com.liven.shopping.cart.dto.OrderCheckoutOutPutDto;
 import br.com.liven.shopping.cart.dto.UserDeleteInPutDto;
 import br.com.liven.shopping.cart.dto.UserInPutDto;
 import br.com.liven.shopping.cart.dto.UserOutPutDto;
