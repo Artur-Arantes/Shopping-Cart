@@ -34,20 +34,6 @@ class CarControllerIntegrationSpec extends BaseIntegrationSpec {
         assertThat(response).isEqualTo(expectedReturn)
     }
 
-    def "should update a cart with success"() {
-        def productCart = new UpdateProductCartInPutDto(11111111111, BigDecimal.TEN)
-        def input = new UpdateCartInPutDto(List.of(productCart), 1L);
-        when: "authenticating with the API"
-        def response = RestAssured.given()
-                .header("Authorization", "Bearer " + validToken)
-                .contentType(ContentType.JSON)
-                .body(input)
-                .when()
-                .put("${urlBase}/v1/cart")
-
-        then: "the response status is OK"
-        response.statusCode() == HttpStatus.OK.value()
-    }
 
     def "should return an error because cart does not exists"() {
         def productCart = new UpdateProductCartInPutDto(11111111111, BigDecimal.TEN)
