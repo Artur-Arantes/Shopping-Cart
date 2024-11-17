@@ -25,8 +25,7 @@ RUN mkdir /deployments \
 
 COPY --from=build /app/target/*.jar /deployments/app.jar
 
-ENV PROFILE=prd
 EXPOSE 8080
 USER 1001
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar", "/deployments/app.jar"]
+ENTRYPOINT ["java", "-jar", "/deployments/app.jar"]
