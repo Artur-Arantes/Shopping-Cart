@@ -20,27 +20,24 @@ public class CheckoutService {
 
     @Transactional
     public OrderCheckoutOutPutDto checkout(Cart cart) {
+        verifyIdCartAlreadyExistsOnOrder(cart);
+        updateStock(cart);
+        Set<ProductOrder> products = toProductOrderSet(cart);
+        final var totalAmount = getTotalAmount(cart);
+        final var order = buildOrder(cart, products, totalAmount);
+        final var savedOrder = orderRepository.saveAndFlush(order);
+
+        return savedOrder.toCheckoutOutPut();
+
+    }
+
+    private void verifyIdCartAlreadyExistsOnOrder(Cart cart) {
         if (orderRepository.findByCart(cart).isPresent()) {
             throw new DuplicateKeyException("Already exist a order for this cart");
         }
+    }
 
-
-        cart.getProducts().forEach(prd -> {
-            Product product = productService.getProductFromId(prd.getId().getProductId());
-            productService.hasStock(prd.getQuantity(), product);
-            product.getInventory().setQuantity(product.getInventory().getQuantity().subtract(prd.getQuantity()));
-            productService.updateProduct(product);
-        });
-
-        Set<ProductOrder> products = cart.getProducts().stream()
-                .map(ProductCart::toProductOrder)
-                .collect(Collectors.toSet());
-
-
-        final var totalAmount = cart.getProducts().stream()
-                .map(ProductCart::getTotalItem)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
+    private static Order buildOrder(Cart cart, Set<ProductOrder> products, BigDecimal totalAmount) {
         final var order = Order.builder()
                 .cart(cart)
                 .user(cart.getUser())
@@ -55,10 +52,29 @@ public class CheckoutService {
                     .orderId(order.getId())
                     .build());
         });
-        final var savedOrder = orderRepository.save(order);
+        return order;
+    }
 
-        return savedOrder.toCheckoutOutPut();
+    private static BigDecimal getTotalAmount(Cart cart) {
+        return cart.getProducts().stream()
+                .map(ProductCart::getTotalItem)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
+    private static Set<ProductOrder> toProductOrderSet(Cart cart) {
+        return cart.getProducts().stream()
+                .map(ProductCart::toProductOrder)
+                .collect(Collectors.toSet());
+
+    }
+
+    private void updateStock(Cart cart) {
+        cart.getProducts().forEach(prd -> {
+            Product product = productService.getProductFromId(prd.getId().getProductId());
+            productService.hasStock(prd.getQuantity(), product);
+            product.getInventory().setQuantity(product.getInventory().getQuantity().subtract(prd.getQuantity()));
+            productService.updateProduct(product);
+        });
     }
 
 }

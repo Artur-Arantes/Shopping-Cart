@@ -50,7 +50,7 @@ class CheckoutServiceSpec extends Specification {
         1 * productService.updateProduct({ it.sku == product2.sku && it.inventory.quantity == BigDecimal.valueOf(8) })
 
         and: "an order is saved"
-        1 * orderRepository.save(_) >> { Order order ->
+        1 * orderRepository.saveAndFlush(_) >> { Order order ->
             assert order.amount == BigDecimal.valueOf(50)
             assert order.products.size() == 2
             return order
