@@ -5,7 +5,7 @@ import br.com.liven.shopping.cart.domain.Product;
 import br.com.liven.shopping.cart.domain.ProductCart;
 import br.com.liven.shopping.cart.domain.ProductCartId;
 import br.com.liven.shopping.cart.dto.CheckoutInPutDto;
-import br.com.liven.shopping.cart.dto.GetCartOutPutDto;
+import br.com.liven.shopping.cart.dto.CreateCartOutPutDto;
 import br.com.liven.shopping.cart.dto.OrderCheckoutOutPutDto;
 import br.com.liven.shopping.cart.dto.UpdateCartInPutDto;
 import br.com.liven.shopping.cart.exception.ObjectNotFoundException;
@@ -31,7 +31,7 @@ public class CartService {
     private final CheckoutService checkoutService;
 
 
-    public GetCartOutPutDto getValidCart(final String email) {
+    public CreateCartOutPutDto getValidCart(final String email) {
         final var user = userService.getUser(email);
 
         final var newCart = Cart.builder()
@@ -108,7 +108,7 @@ public class CartService {
         }
     }
 
-    public GetCartOutPutDto getCartById(final long id, final String email) {
+    public CreateCartOutPutDto getCartById(final long id, final String email) {
         return getValidCart(id, email).toGetCartOutPutDto();
     }
 }

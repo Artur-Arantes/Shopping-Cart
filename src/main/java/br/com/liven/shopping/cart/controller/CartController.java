@@ -28,8 +28,7 @@ public class CartController {
     @PostMapping
     @Operation(summary = "Create cart endpoint, must have token and valid user to create a cart")
     @ApiResponse(responseCode = "200", description = "Cart created", content = @Content)
-    @ApiResponse(responseCode = "404", description = "User does not exist", content = @Content)
-    public ResponseEntity<GetCartOutPutDto> addCart(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<CreateCartOutPutDto> addCart(@RequestHeader("Authorization") String authorizationHeader) {
         final var email = tokenService.getEmailByAuthorizationHeader(authorizationHeader);
         final var outPut = service.getValidCart(email);
         return ResponseEntity.ok(outPut);
@@ -51,12 +50,12 @@ public class CartController {
     @GetMapping
     @Operation(summary = "Get cart by ID")
     @ApiResponse(responseCode = "200", description = "Success to get cart",
-            content = @Content(schema = @Schema(implementation = GetCartOutPutDto.class)))
+            content = @Content(schema = @Schema(implementation = CreateCartOutPutDto.class)))
     @ApiResponse(responseCode = "404", description = "Cart does not exist", content = @Content)
     @ApiResponse(responseCode = "403", description =
             "Validation error, such as unauthorized access to another user's cart or expired cart", content = @Content)
-    public ResponseEntity<GetCartOutPutDto> getCartById(@RequestHeader("Authorization") String authorizationHeader,
-                                                        @RequestParam long id) {
+    public ResponseEntity<CreateCartOutPutDto> getCartById(@RequestHeader("Authorization") String authorizationHeader,
+                                                           @RequestParam long id) {
         final var email = tokenService.getEmailByAuthorizationHeader(authorizationHeader);
         final var outPut = service.getCartById(id, email);
         return ResponseEntity.ok(outPut);

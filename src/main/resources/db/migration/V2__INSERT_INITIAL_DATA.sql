@@ -1,5 +1,11 @@
-insert into permission VALUES(1,'ADMIN');
-insert into permission VALUES(2,'USER');
-insert into person VALUES('liven', 'liven@teste.com');
-insert into users VALUES(1,'$2a$10$aOKNjGjqTnGDv1Nxxb.RGOGxFdGYk7b80Tr0Uu9uiSEvMjjYmGl4y','liven@teste.com',1,'ADMIN', now(), now(), 1);
-insert into user_permission VALUES(1,1);
+INSERT INTO permission VALUES(1,'ADMIN');
+INSERT INTO permission VALUES(2,'USER');
+INSERT INTO person VALUES('liven', 'liven@teste.com');
+INSERT INTO users VALUES(1,'$2a$10$aOKNjGjqTnGDv1Nxxb.RGOGxFdGYk7b80Tr0Uu9uiSEvMjjYmGl4y','liven@teste.com',1,'ADMIN', now(), now(), 1);
+INSERT INTO user_permission VALUES(1,1);
+INSERT INTO product VALUES(11111111111, "product1", 10.00, "test", now(), now(), 0);
+INSERT INTO product VALUES(22222222222, "product2", 20.00, "test", now(), now(), 0);
+INSERT INTO inventory VALUES(22222222222, 10.00, now(), now(), 0);
+INSERT INTO inventory VALUES(11111111111, 50.00, now(), now(), 0);
+INSERT INTO cart VALUES(1,1,0.00,now(),now(),0);
+INSERT INTO product_cart VALUES(1,11111111111,1.00,10.00);

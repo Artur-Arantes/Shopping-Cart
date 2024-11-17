@@ -1,6 +1,6 @@
 package br.com.liven.shopping.cart.domain;
 
-import br.com.liven.shopping.cart.dto.GetCartOutPutDto;
+import br.com.liven.shopping.cart.dto.CreateCartOutPutDto;
 import br.com.liven.shopping.cart.dto.ProductOutPutDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -41,11 +41,11 @@ public class Cart extends BaseEntity {
     private List<ProductCart> products;
 
 
-    public GetCartOutPutDto toGetCartOutPutDto() {
+    public CreateCartOutPutDto toGetCartOutPutDto() {
         List<ProductOutPutDto> productOutPutDto = products.stream().map(ProductCart::toOutPutDto).toList();
         BigDecimal totalAmount = productOutPutDto.stream().map(ProductOutPutDto::getTotalItem)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return new GetCartOutPutDto(id, productOutPutDto, totalAmount);
+        return new CreateCartOutPutDto(id, productOutPutDto, totalAmount);
     }
 
 }

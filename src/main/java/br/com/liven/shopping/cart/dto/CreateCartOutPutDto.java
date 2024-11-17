@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Schema(description = "Cart")
-public record GetCartOutPutDto(
+public record CreateCartOutPutDto(
         @Schema(description = "Cart Id")
         long id,
         @Schema(description = "Products in the cart")

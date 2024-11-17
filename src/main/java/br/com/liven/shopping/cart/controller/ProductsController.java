@@ -40,7 +40,7 @@ public class ProductsController {
     @Operation(summary = "Edit Product")
     @ApiResponse(responseCode = "200", description = "Checkout Success",
             content = @Content(schema = @Schema(implementation = OrderCheckoutOutPutDto.class)))
-    @ApiResponse(responseCode = "400",
+    @ApiResponse(responseCode = "403",
             description = "Invalid SKU: must have 11 digits.Negative stock quantity is not allowed.", content = @Content)
     @ApiResponse(responseCode = "404", description = "Product SKU does not exist", content = @Content)
     public ResponseEntity<HttpStatus> updateProduct(@RequestBody @Valid @NonNull final UpdateProductIntPutDto productInPutDto) {
