@@ -35,6 +35,8 @@ class ShoppingCartDataBaseContainer extends MySQLContainer<ShoppingCartDataBaseC
             System.setProperty("DB_URL", container.getJdbcUrl())
             System.setProperty("DB_USER", container.getUsername())
             System.setProperty("DB_KEY", container.getPassword())
+            System.setProperty("TOKEN_KEY", "123456")
+            System.setProperty("CART_EXPIRE_IN", "120")
         }
     }
 
