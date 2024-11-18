@@ -89,9 +89,8 @@ Isso inicializará a aplicação localmente, sem a necessidade de configurar o b
 
 ---
 #### Testes
-Tipos de Testes Implementados
-Testes Unitários
-Testes de Integração
+- Testes Unitários
+- Testes de Integração
 ---
 ### Deploy
 A aplicação foi deployada em produção no Heroku e pode ser acessada visual mente pelo Swagger:
