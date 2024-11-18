@@ -25,7 +25,7 @@ O Swagger da aplicação de produção pode ser acessado [aqui](https://liven-sh
 - **Carrinhos**
     - Criar carrinhos.
     - Adicionar produtos aos carrinhos.
-    - Realizar o checkout de um carrinho.
+    - Realizar o checkout de um carrinho, nesse endpoint existe controle de concorrência por versionamento.
 
 ---
 
@@ -35,56 +35,71 @@ O Swagger da aplicação de produção pode ser acessado [aqui](https://liven-sh
 
 - **Docker** e **Docker Compose** instalados.
 
-### Como executar
+### Como executar pelo docker
 
 1. Clone este repositório:
    ```bash
    git clone <URL-DO-REPOSITORIO>
    cd shopping-cart
+
+2. Rode o comando do Maven para clean e package   
+      ```bash
+    mvn clean
+    mvn package
    
-2. Execute o comando:
+3. Certifique-se que exista um jar na pasta /target Execute o comando:
    ```bash
    docker-compose up --build
    
 Isso inicializará a aplicação localmente, sem a necessidade de configurar o banco de dados manualmente.
 
+---
+### Como executar pela IDE
+####  Váriaves de ambiente
+        DB_USER
+        DB_URL
+        DB_KEY
+        TOKEN_KEY
+        CART_EXPIRE_IN 
+
+
 ### Tecnologias e Ferramentas
 #### Principais Tecnologias
-##### Spring Boot
-##### MySQL
-##### Groovy
-##### JAVA 17
-##### Docker e Docker Compose
-##### Spock
-##### Swagger
-##### Flyway
+- #####  Spring Boot
+- ##### MySQL
+- ##### Groovy
+- ##### JAVA 17
+- ##### Docker e Docker Compose
+- ##### Spock
+- ##### Swagger
+- ##### Flyway
 
 
 ### Outras ferramentas usadas : 
-Spring Boot Starter Data JPA
-Spring Boot Starter Security
-Spring Boot Starter Validation
-Spring Boot Starter Web
-Flyway MySQL
-Lombok
-Hibernate Core
-Auth0 Java JWT
-Spock Framework
-Testcontainers
-Rest Assured
-AssertJ 
+- Spring Boot Starter Data JPA.
+- Spring Boot Starter Security
+- Spring Boot Starter Validation
+- Spring Boot Starter Web
+- Lombok
+- Hibernate Core
+- Auth0 Java JWT
+- Testcontainers
+- Rest Assured
+- AssertJ 
 
-
+---
 #### Testes
 Tipos de Testes Implementados
 Testes Unitários
 Testes de Integração
-
+---
 ### Deploy
 A aplicação foi deployada em produção no Heroku e pode ser acessada visual mente pelo Swagger:
 https://liven-shopping-cart-e1003610f15e.herokuapp.com/swagger-ui/index.html
 
 URL da produção: Swagger UI
+
+---
 ### Pipeline CI/CD
 O projeto possui uma pipeline configurada com as seguintes etapas:
 
