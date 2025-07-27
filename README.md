@@ -1,8 +1,8 @@
-# Liven Shopping Cart
+# Shopping Cart
 
 ## Descrição
 
-Este projeto foi desenvolvido como parte de um teste prático para a empresa **Liven**. Ele consiste em uma aplicação que simula um carrinho de compras, permitindo a criação, edição e gerenciamento de usuários, produtos e carrinhos.
+Este projeto foi desenvolvido como parte de um teste prático. Ele consiste em uma aplicação que simula um carrinho de compras, permitindo a criação, edição e gerenciamento de usuários, produtos e carrinhos.
 
 A aplicação conta com autenticação para geração de tokens e oferece um **Swagger UI** para facilitar a exploração dos endpoints.
 
